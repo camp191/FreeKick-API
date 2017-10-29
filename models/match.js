@@ -14,6 +14,9 @@ const matchSchema = mongoose.Schema({
   matchDetail: {
     type: String,
   },
+  matchDescription: {
+    type: String,
+  },
   matchCondtion: {
     type: String,
   },

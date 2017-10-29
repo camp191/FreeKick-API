@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const {Mission} = require('./mission')
+const { Player } = require('./player')
 
 const teamSchema = mongoose.Schema({
   teamName: {
@@ -11,7 +11,10 @@ const teamSchema = mongoose.Schema({
     type: String,
     require: true
   },
-  mission: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Mission' }]
+  player: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Player'
+  }]
 })
 
 const Team = mongoose.model('Team', teamSchema)

@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const { Team } = require('./team')
+const { Sticker } = require('./sticker')
+
 const playerSchema = mongoose.Schema({
   name: {
     type: String,
@@ -35,7 +38,15 @@ const playerSchema = mongoose.Schema({
   },
   description: {
     type: String
-  }
+  },
+  team: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Team'
+  },
+  sticker: [{ 
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Sticker'
+  }]
 })
 
 const Player = mongoose.model('Player', playerSchema)
