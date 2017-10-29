@@ -1,6 +1,6 @@
 # FreeKick API Project
 
-## Front End Installation
+## Installation
 
 Install node packages
 
