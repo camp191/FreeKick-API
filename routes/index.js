@@ -44,9 +44,16 @@ router.post("/team", (req, res) => {
 })
 
 router.get("/team", (req, res) => {
-  Team.find().then((team) => {
-      res.send({team})
-  })
+  Team
+    .find()
+    .populate('mission')
+    .then(
+      data => {
+        res.send({
+          data
+        })
+      }
+    )
 })
 
 module.exports = router
