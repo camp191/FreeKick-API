@@ -9,13 +9,17 @@ const missionSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  missionCondtion: {
+  missionCondition: {
     type: String,
   },
   reward: {
     type: Number,
     require: true,
   },
+  typeMission: {
+    type: String,
+    require: true
+  }
 })
 
 const Mission = mongoose.model('Mission', missionSchema)
