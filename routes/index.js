@@ -9,16 +9,28 @@ router.get("/", function(req, res, next) {
   res.send({ res: "welcome to APIs" })
 })
 
+router.get("/sss", (req, res) => {
+
+  Player
+    .find({ age: 26 })
+    .populate('team')
+    .then((data) => {
+      res.send({
+        player: data
+      })
+    })
+})
+
 //  Send Picture
-// router.get("/file", (req, res) => {
-//   fs.readFile(__dirname + "/../public/images/a.png", function(err, data) {
-//     if (err) throw err;
-//     res.send({
-//       Hello: "Good",
-//       img: data
-//     })
-//   })
-// }) 
+router.get("/file", (req, res) => {
+  fs.readFile(__dirname + "/../public/images/a.png", function(err, data) {
+    if (err) throw err;
+    res.send({
+      Hello: "Good",
+      img: data
+    })
+  })
+}) 
 
 // router.post("/mission", (req, res) => {
 //   let mission = new Mission({
@@ -35,23 +47,23 @@ router.get("/", function(req, res, next) {
 //   )
 // })
 
-// router.post("/", (req, res) => {
-//   let mission = new Mission({
-//     missionDesc: req.body.missionDesc,
-//     missionImage: req.body.missionImage,
-//     missionCondition: req.body.missionCondition,
-//     reward: req.body.reward
-//   })
+router.post("/", (req, res) => {
+  let mission = new Mission({
+    missionDesc: req.body.missionDesc,
+    missionImage: req.body.missionImage,
+    missionCondition: req.body.missionCondition,
+    reward: req.body.reward,
+  })
 
-//   mission.save().then(
-//     data => {
-//       res.send({
-//         data,
-//         message: "Save Done"
-//       })
-//     }
-//   )
-// })
+  mission.save().then(
+    data => {
+      res.send({
+        data,
+        message: "Save Done"
+      })
+    }
+  )
+})
 
 // router.post("/player", (req, res) => {
 //   let player = new Player({
