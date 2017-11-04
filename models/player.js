@@ -39,6 +39,9 @@ const playerSchema = mongoose.Schema({
   description: {
     type: String
   },
+  abilityPic : {
+    type: String
+  },
   team: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Team'

@@ -25,9 +25,13 @@ router.get("/sss", (req, res) => {
 router.get("/file", (req, res) => {
   fs.readFile(__dirname + "/../public/images/a.png", function(err, data) {
     if (err) throw err;
-    res.send({
-      Hello: "Good",
-      img: data
+    Player
+      .find({ age: 26 })
+      .then(player => {
+        res.send({
+          player: player.map(player => player.name),
+          img: data
+        })
     })
   })
 }) 

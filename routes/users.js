@@ -36,12 +36,14 @@ router.post('/addUser', (req, res) => {
     )
 })
 
-router.get('/', (req, res) => {
+router.get('/myMission/:userId', (req, res) => {
+  const userId = req.params.userId
+
   User
-    .find()
+    .findOne({ _id: userId })
     .populate('myMission.mission')
     .then(data => {
-      res.send({data})
+      res.send(data.myMission)
     })
 })
 
@@ -52,6 +54,7 @@ router.get('/userPoint/:id', (req, res) => {
     .findOne({ _id: id })
     .then(data => {
       res.send({
+        username: "AAA",
         manpoint: data.manpoint,
         matchpoint: data.matchpoint,
         sticker: data.sticker.length
