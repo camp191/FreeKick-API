@@ -5,38 +5,35 @@ const { User } = require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 const { Mission } = require('./../models/mission')
 
-
-let missions = []
-  Mission.find().then(data => {
-    data.map((mission) => {
-      missions.append({
-        mission: mission._id,
-        done: false
-      })
-    })
-  })
-
-  console.log(missions)
-
 router.post('/addUser', (req, res) => {
-
-  let user = new User({
-    auth: [],
-    myTeam: req.body.myTeam,
-    myMission: [mission],
-    sticker: [],
-    sticker: [],
-    myMatch: [],
-  })
-
-  user.save().then(
-    data => {
-      res.send({
-        response: "สมัครสมาชิกเรียบร้อย",
-        userid: data._id
+  let myMission = [];
+  
+  Mission
+    .find()
+    .exec((err, data) => {
+      data.map((mission) => {
+        myMission.push({mission, done: false})
       })
+    }).then(() => {
+      let user = new User({
+        auth: [],
+        myTeam: req.body.myTeam,
+        myMission,
+        sticker: [],
+        sticker: [],
+        myMatch: [],
+      })
+    
+      user.save().then(
+        data => {
+          res.send({
+            response: "สมัครสมาชิกเรียบร้อย",
+            userid: data._id
+          })
+        }
+      )
     }
-  )
+    )
 })
 
 router.get('/', (req, res) => {
