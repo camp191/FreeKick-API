@@ -6,13 +6,14 @@ const { Match } = require('./match')
 const { Mission } = require('./mission')
 
 const userSchema = mongoose.Schema({
-  auth: [{
-    email: String,
-    name: String,
-    username: String,
-    picture: String,
-    token: String,
-  }],
+  auth: {
+    phone: {
+      phoneNumber: Number,
+      name: String,
+      username: String,
+      password: String
+    }
+  },
   myTeam: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Player'

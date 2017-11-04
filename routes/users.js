@@ -16,8 +16,15 @@ router.post('/addUser', (req, res) => {
       })
     }).then(() => {
       let user = new User({
-        auth: [],
-        myTeam: req.body.myTeam,
+        auth: {
+          phone: {
+            phoneNumber: req.body.phoneNumber, 
+            name: req.body.name,
+            username: req.body.username,
+            password: req.body.password
+          }
+        },
+        myTeam: [],
         myMission,
         sticker: [],
         sticker: [],
@@ -47,14 +54,15 @@ router.get('/myMission/:userId', (req, res) => {
     })
 })
 
-router.get('/userPoint/:id', (req, res) => {
+router.get('/userdata/:id', (req, res) => {
   let id = req.params.id
 
   User
     .findOne({ _id: id })
     .then(data => {
       res.send({
-        username: "AAA",
+        username: data.auth.facebook.username,
+        picture: data.auth.facebook.picture,
         manpoint: data.manpoint,
         matchpoint: data.matchpoint,
         sticker: data.sticker.length

@@ -9,18 +9,6 @@ router.get("/", function(req, res, next) {
   res.send({ res: "welcome to APIs" })
 })
 
-router.get("/sss", (req, res) => {
-
-  Player
-    .find({ age: 26 })
-    .populate('team')
-    .then((data) => {
-      res.send({
-        player: data
-      })
-    })
-})
-
 //  Send Picture
 router.get("/file", (req, res) => {
   fs.readFile(__dirname + "/../public/images/a.png", function(err, data) {
