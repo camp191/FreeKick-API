@@ -1,6 +1,9 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const router = express.Router()
 
+const { authenticatePhone } = require('./../middleware/authenticate')
+const { secret } = require('./../config/config')
 const { User } = require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 const { Mission } = require('./../models/mission')
@@ -43,26 +46,47 @@ router.post('/addUser', (req, res) => {
     )
 })
 
-router.get('/myMission/:userId', (req, res) => {
-  const userId = req.params.userId
+router.post('/login', (req, res) => {
+  User
+    .findOne({ 'auth.phone.phoneNumber': req.body.phoneNumber })
+    .then((user) => {
+      if(!user) {
+        res.json({ success: false, message: 'เบอร์โทรไม่ถูกต้อง' })
+      } else if (user) {
+        if (user.auth.phone.password !== req.body.password) {
+          res.json({ success: false, message: 'รหัสผ่านไม่ถูกต้อง' })
+        } else {
+          const payload = {userId: user._id}
+          const token = jwt.sign(payload, secret)
+  
+          res.json({
+            success: true,
+            message: 'เข้าสู่ระบบเรียบร้อยแล้ว',
+            token: token
+          });
+        }
+      }
+    }, (e) => {
+      if(e) throw e
+    })
+})
+
+router.get('/myMission', authenticatePhone, (req, res) => {
 
   User
-    .findOne({ _id: userId })
+    .findOne({ _id: req.decoded.userId })
     .populate('myMission.mission')
     .then(data => {
       res.send(data.myMission)
     })
 })
 
-router.get('/userdata/:id', (req, res) => {
-  let id = req.params.id
-
+router.get('/userdata', authenticatePhone, (req, res) => {
   User
-    .findOne({ _id: id })
+    .findOne({ _id: req.decoded.userId })
     .then(data => {
       res.send({
-        username: data.auth.facebook.username,
-        picture: data.auth.facebook.picture,
+        username: data.auth.phone.username,
         manpoint: data.manpoint,
         matchpoint: data.matchpoint,
         sticker: data.sticker.length
