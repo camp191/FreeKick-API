@@ -1,9 +1,12 @@
-const express = require('express')
 const jwt = require('jsonwebtoken')
+const { ObjectID } = require('mongodb')
+const express = require('express')
+
 const router = express.Router()
 
 const { authenticatePhone } = require('./../middleware/authenticate')
 const { secret } = require('./../config/config')
+
 const { User } = require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 const { Mission } = require('./../models/mission')
@@ -43,7 +46,7 @@ router.post('/addUser', (req, res) => {
         }
       )
     }
-    )
+  )
 })
 
 router.post('/login', (req, res) => {
@@ -71,8 +74,24 @@ router.post('/login', (req, res) => {
     })
 })
 
-router.get('/myMission', authenticatePhone, (req, res) => {
+router.patch('/addTeam/:teamId', authenticatePhone, (req, res) => {
+  const teamId = req.params.teamId
 
+  if(!ObjectID.isValid(teamId)) {
+    return res.status(404).send({ error: 'id ของทีมผิดพลาด'})
+  }
+
+  User
+    .findOneAndUpdate({ _id: req.decoded.userId }, { $push: { myTeam: teamId }})
+    .then(data => {
+      res.send({ success: true, message: 'อัพเดททีมเรียบร้อย'})
+    })
+    .catch((e) => {
+      res.status(400).send(e)
+    })
+})
+
+router.get('/myMission', authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
     .populate('myMission.mission')

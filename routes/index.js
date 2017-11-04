@@ -6,23 +6,23 @@ const { Team } = require("../models/team")
 const { Player } = require("../models/player")
 
 router.get("/", function(req, res, next) {
-  res.send({ res: "welcome to APIs" })
+  res.send({ res: "welcome to FreeKick APIs" })
 })
 
 //  Send Picture
-router.get("/file", (req, res) => {
-  fs.readFile(__dirname + "/../public/images/a.png", function(err, data) {
-    if (err) throw err;
-    Player
-      .find({ age: 26 })
-      .then(player => {
-        res.send({
-          player: player.map(player => player.name),
-          img: data
-        })
-    })
-  })
-}) 
+// router.get("/file", (req, res) => {
+//   fs.readFile(__dirname + "/../public/images/a.png", function(err, data) {
+//     if (err) throw err;
+//     Player
+//       .find({ age: 26 })
+//       .then(player => {
+//         res.send({
+//           player: player.map(player => player.name),
+//           img: data
+//         })
+//     })
+//   })
+// }) 
 
 // router.post("/mission", (req, res) => {
 //   let mission = new Mission({
@@ -39,23 +39,23 @@ router.get("/file", (req, res) => {
 //   )
 // })
 
-router.post("/", (req, res) => {
-  let mission = new Mission({
-    missionDesc: req.body.missionDesc,
-    missionImage: req.body.missionImage,
-    missionCondition: req.body.missionCondition,
-    reward: req.body.reward,
-  })
+// router.post("/", (req, res) => {
+//   let mission = new Mission({
+//     missionDesc: req.body.missionDesc,
+//     missionImage: req.body.missionImage,
+//     missionCondition: req.body.missionCondition,
+//     reward: req.body.reward,
+//   })
 
-  mission.save().then(
-    data => {
-      res.send({
-        data,
-        message: "Save Done"
-      })
-    }
-  )
-})
+//   mission.save().then(
+//     data => {
+//       res.send({
+//         data,
+//         message: "Save Done"
+//       })
+//     }
+//   )
+// })
 
 // router.post("/player", (req, res) => {
 //   let player = new Player({
