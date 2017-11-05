@@ -12,52 +12,54 @@ const { User } = require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 const { Mission } = require('./../models/mission')
 
-
 router.post('/addUser', (req, res) => {
   let myMission = [];
   const password = req.body.password
   
   Mission
-  .find()
-  .exec((err, data) => {
-    data.map((mission) => {
-      myMission.push({mission, done: false})
-    })
-  })
-  .then(() => {
-    bycrypt.hash(password, 10)
-    .then(hash => {
-      let user = new User({
-        auth: {
-          phone: {
-            phoneNumber: req.body.phoneNumber, 
-            name: req.body.name,
-            username: req.body.username,
-            password: hash
-          }
-        },
-        myTeam: [],
-        myMission,
-        sticker: [],
-        sticker: [],
-        myMatch: [],
+    .find()
+    .exec((err, data) => {
+      data.map((mission) => {
+        myMission.push({mission, done: false})
       })
-    
-      user
-        .save()
-        .then(
-          data => {
-            res.send({
-              success: true,
-              response: "สมัครสมาชิกเรียบร้อย",
-              userid: data._id
-            })
-          }
-        )
-        .catch(e => res.send({ success: false, message: 'เบอร์นี้ใช้สมัครแล้ว'}))
     })
-  })
-  .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
+    .then(() => {
+      bycrypt.hash(password, 10)
+      .then(hash => {
+        let user = new User({
+          auth: {
+            phone: {
+              phoneNumber: req.body.phoneNumber, 
+              name: req.body.name,
+              username: req.body.username,
+              password: hash
+            }
+          },
+          myTeam: [],
+          myMission,
+          sticker: [],
+          sticker: [],
+          myMatch: [],
+        })
+      
+        user
+          .save()
+          .then(
+            data => {
+              const payload = {userId: user._id}
+              const token = jwt.sign(payload, secret)
+
+              res.send({
+                success: true,
+                response: "สมัครสมาชิกเรียบร้อย",
+                token
+              })
+            }
+          )
+          .catch(e => res.send({ success: false, message: 'เบอร์นี้ใช้สมัครแล้ว'}))
+      })
+    })
+    .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
 })
 
 router.post('/login', (req, res) => {
