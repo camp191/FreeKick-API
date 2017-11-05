@@ -9,7 +9,10 @@ const { Mission } = require('./mission')
 const userSchema = mongoose.Schema({
   auth: {
     phone: {
-      phoneNumber: Number,
+      phoneNumber: {
+        type: String,
+        unique: true
+      },
       name: String,
       username: String,
       password: String
