@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const { Player } = require('./player')
+const { Team } = require('./team')
 const { Sticker } = require('./sticker')
 const { Match } = require('./match')
 const { Mission } = require('./mission')
@@ -16,7 +17,7 @@ const userSchema = mongoose.Schema({
   },
   myTeam: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Player'
+    ref: 'Team'
   }],
   myMission: [{
     mission: {

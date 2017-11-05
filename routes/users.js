@@ -113,4 +113,15 @@ router.get('/userdata', authenticatePhone, (req, res) => {
     })
 })
 
+router.get('/myTeam', authenticatePhone, (req, res) => {
+  User
+    .findOne({ _id: req.decoded.userId })
+    .populate({ path: 'myTeam', populate: { path: 'player' }})
+    .then(data => {
+      res.send({
+        myTeam: data.myTeam
+      })
+    })
+})
+
 module.exports = router
