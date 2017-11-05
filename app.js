@@ -10,6 +10,7 @@ const {mongoose} = require('./db/mongoose')
 const index = require('./routes/index')
 const users = require('./routes/users')
 const mission = require('./routes/mission')
+const match = require('./routes/match')
 
 const app = express()
 
@@ -22,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', index)
 app.use('/users', users)
 app.use('/missions', mission)
+app.use('/matches', match)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
