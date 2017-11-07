@@ -15,7 +15,10 @@ router.get('/:missionId', authenticatePhone, (req, res) => {
   Mission
     .findOne({ _id: missionId })
     .then(data => {
-      res.send({mission: data})
+      res.send({
+        success: true,
+        mission: data
+      })
     }, (e) => {
       res.status(400).send({ success: false, message: 'พบความผิดพลาด' })
     })

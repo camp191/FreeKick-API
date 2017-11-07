@@ -12,6 +12,7 @@ const { User } = require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 const { Mission } = require('./../models/mission')
 
+// Add User
 router.post('/addUser', (req, res) => {
   let myMission = [];
   const password = req.body.password
@@ -51,7 +52,7 @@ router.post('/addUser', (req, res) => {
 
               res.send({
                 success: true,
-                response: "สมัครสมาชิกเรียบร้อย",
+                message: "สมัครสมาชิกเรียบร้อย",
                 token
               })
             }
@@ -62,6 +63,7 @@ router.post('/addUser', (req, res) => {
     .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
 })
 
+// Login
 router.post('/login', (req, res) => {
   User
   .findOne({ 'auth.phone.phoneNumber': req.body.phoneNumber })
@@ -91,6 +93,7 @@ router.post('/login', (req, res) => {
     })
 })
 
+// Add team to my team
 router.patch('/addTeam/:teamId', authenticatePhone, (req, res) => {
   const teamId = req.params.teamId
 
@@ -104,10 +107,34 @@ router.patch('/addTeam/:teamId', authenticatePhone, (req, res) => {
       res.send({ success: true, message: 'อัพเดททีมเรียบร้อย'})
     })
     .catch((e) => {
-      res.status(400).send(e)
+      res.status(400).send({ success: false, message: 'พบความผิดพลาด' })
     })
 })
 
+router.patch('/randomSticker', authenticatePhone, (req, res) => {
+  Sticker
+    .findRandom({}, {}, {limit: 5}, function(err, stickers) {
+      let promises = stickers.map((sticker) => {
+        User
+          .findOneAndUpdate(
+            { _id: req.decoded.userId },
+            { $push: { 
+              sticker: {
+                sticker,
+              }
+            }}
+          ).then(data => {
+            return data
+          })
+      })
+
+      Promise.all(promises).then(function(results) {
+        res.send({ message: "done" })
+      })
+    })
+})
+
+// Get User Mission
 router.get('/myMission', authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -123,6 +150,7 @@ router.get('/myMission', authenticatePhone, (req, res) => {
     })
 })
 
+// User basic data
 router.get('/userdata', authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -138,6 +166,7 @@ router.get('/userdata', authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
 
+// User myTeam
 router.get('/myTeam', authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })

@@ -662,6 +662,10 @@ mongodb@2.2.33, mongodb@^2.2.33:
     mongodb-core "2.1.17"
     readable-stream "2.2.7"
 
+mongoose-simple-random@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/mongoose-simple-random/-/mongoose-simple-random-0.4.1.tgz#09054d8555826730209a7405b1d73cb4a8f91aa3"
+
 mongoose@^4.12.4:
   version "4.12.4"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-4.12.4.tgz#502a2c037376a6c6356eee89128e75653612127c"
