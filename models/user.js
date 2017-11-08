@@ -42,7 +42,7 @@ const userSchema = mongoose.Schema({
     require: true,
     default: 0
   },
-  sticker: [{
+  mySticker: [{
     sticker: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Sticker'

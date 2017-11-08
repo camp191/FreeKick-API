@@ -55,4 +55,30 @@ router.get("/mySticker", authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
 })
 
+router.patch("/openPack", authenticatePhone, (req, res) => {
+
+  User.findOne({ _id: req.decoded.userId })
+    .populate('mySticker.sticker')
+    .then(data => {
+      const falseSticker = data.mySticker.filter((sticker) => sticker.open === false)
+      const updateSticker = falseSticker.map(sticker => {
+        User.findOneAndUpdate(
+          { _id: req.decoded.userId, "mySticker": {$elemMatch: {open: false}} }, 
+          { $set: { 'mySticker.$.open': true } }, 
+          { new: true }
+        )
+        .then(data => {
+          return data
+        })
+      })
+
+      Promise.all(updateSticker).then(() => {
+        res.send({
+          newSticker: falseSticker,
+          amount: falseSticker.length
+        })
+      })
+    })
+})
+
 module.exports = router

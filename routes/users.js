@@ -120,7 +120,7 @@ router.patch('/randomSticker', authenticatePhone, (req, res) => {
           .findOneAndUpdate(
             { _id: req.decoded.userId },
             { $push: { 
-              sticker: {
+              mySticker: {
                 sticker,
               }
             }}
@@ -161,7 +161,7 @@ router.get('/userdata', authenticatePhone, (req, res) => {
         username: data.auth.phone.username,
         manpoint: data.manpoint,
         matchpoint: data.matchpoint,
-        sticker: data.sticker.length
+        sticker: data.mySticker.length
       })
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
