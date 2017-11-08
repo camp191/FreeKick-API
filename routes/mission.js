@@ -4,6 +4,7 @@ const { ObjectID } = require('mongodb')
 const { authenticatePhone } = require('./../middleware/authenticate')
 
 const { Mission } = require('./../models/mission')
+const { User } =  require('./../models/user')
 
 router.get('/:missionId', authenticatePhone, (req, res) => {
   const missionId = req.params.missionId
@@ -22,6 +23,10 @@ router.get('/:missionId', authenticatePhone, (req, res) => {
     }, (e) => {
       res.status(400).send({ success: false, message: 'พบความผิดพลาด' })
     })
+})
+
+router.patch('/doMission/:missionId', authenticatePhone, (req, res) => {
+  
 })
 
 module.exports = router

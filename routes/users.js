@@ -25,40 +25,41 @@ router.post('/addUser', (req, res) => {
       })
     })
     .then(() => {
-      bycrypt.hash(password, 10)
-      .then(hash => {
-        let user = new User({
-          auth: {
-            phone: {
-              phoneNumber: req.body.phoneNumber, 
-              name: req.body.name,
-              username: req.body.username,
-              password: hash
-            }
-          },
-          myTeam: [],
-          myMission,
-          sticker: [],
-          sticker: [],
-          myMatch: [],
-        })
-      
-        user
-          .save()
-          .then(
-            data => {
-              const payload = {userId: user._id}
-              const token = jwt.sign(payload, secret)
+      bycrypt
+        .hash(password, 10)
+        .then(hash => {
+          let user = new User({
+            auth: {
+              phone: {
+                phoneNumber: req.body.phoneNumber, 
+                name: req.body.name,
+                username: req.body.username,
+                password: hash
+              }
+            },
+            myTeam: [],
+            myMission,
+            sticker: [],
+            sticker: [],
+            myMatch: [],
+          })
+        
+          user
+            .save()
+            .then(
+              data => {
+                const payload = {userId: user._id}
+                const token = jwt.sign(payload, secret)
 
-              res.send({
-                success: true,
-                message: "สมัครสมาชิกเรียบร้อย",
-                token
-              })
-            }
-          )
-          .catch(e => res.send({ success: false, message: 'เบอร์นี้ใช้สมัครแล้ว'}))
-      })
+                res.send({
+                  success: true,
+                  message: "สมัครสมาชิกเรียบร้อย",
+                  token
+                })
+              }
+            )
+            .catch(e => res.send({ success: false, message: 'เบอร์นี้ใช้สมัครแล้ว'}))
+        })
     })
     .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
 })
@@ -129,7 +130,7 @@ router.patch('/randomSticker', authenticatePhone, (req, res) => {
       })
 
       Promise.all(promises).then(function(results) {
-        res.send({ message: "done" })
+        res.send({ success: true, message: "คุณได้รับ 5 สติกเกอร์" })
       })
     })
 })
