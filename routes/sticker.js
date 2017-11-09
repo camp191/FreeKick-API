@@ -6,18 +6,18 @@ const { authenticatePhone } = require('./../middleware/authenticate')
 const { Sticker } = require('./../models/sticker')
 const { User } = require('./../models/user')
 
-router.post("/addSticker", (req, res) => {
-  let sticker = new Sticker({
-    stickerImage: req.body.stickerImage,
-    playerId: req.body.playerId
-  })
+// router.post("/addSticker", (req, res) => {
+//   let sticker = new Sticker({
+//     stickerImage: req.body.stickerImage,
+//     playerId: req.body.playerId
+//   })
 
-  sticker.save().then(
-    data => {
-      res.send({data})
-    }
-  )
-})
+//   sticker.save().then(
+//     data => {
+//       res.send({data})
+//     }
+//   )
+// })
 
 // router.get("/:playerId", (req, res) => {
 //   const playerId = req.params.playerId
@@ -78,6 +78,27 @@ router.patch("/openPack", authenticatePhone, (req, res) => {
           amount: falseSticker.length
         })
       })
+    })
+})
+
+router.get("/myAlbum", authenticatePhone, (req, res) => {
+  User
+    .findOne({ _id: req.decoded.userId })
+    .populate({path: 'myTeam', populate: {path: 'player'}})
+    .then(data => {
+      res.send({myTeam: data.myTeam})
+    })
+})
+
+router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
+  const teamId = req.params.teamId
+
+  User
+    .findOne({ _id: req.decoded.userId })
+    .populate({path: 'mySticker.sticker', populate: {path: 'playerId'}})
+    .then(data => {
+      const myStickerTeam = data.mySticker.filter(sticker => sticker.sticker.playerId.team == teamId)
+      res.send({userTeamSticker: myStickerTeam})
     })
 })
 
