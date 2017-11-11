@@ -51,6 +51,10 @@ const userSchema = mongoose.Schema({
       type: Boolean,
       default: false
     },
+    use: {
+      type: Boolean,
+      default: false
+    },
     amount: Number,
     timeStamp: Date
   }],

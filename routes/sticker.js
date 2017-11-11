@@ -81,6 +81,7 @@ router.patch("/openPack", authenticatePhone, (req, res) => {
     })
 })
 
+// My Album
 router.get("/myAlbum", authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -100,6 +101,34 @@ router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
       const myStickerTeam = data.mySticker.filter(sticker => sticker.sticker.playerId.team == teamId)
       res.send({userTeamSticker: myStickerTeam})
     })
+})
+
+// Get sticker from QR
+router.post("/getSticker", authenticatePhone, (req, res) => {
+  const code = req.body.code
+
+  if (code === 1234) {
+    Sticker
+      .findRandom({}, {}, {limit: 1}, function(err, sticker) {
+          User
+            .findOneAndUpdate(
+              { _id: req.decoded.userId },
+              { $push: { 
+                mySticker: {
+                  ...sticker,
+                }
+              }}
+            ).then(data => {
+              res.send({
+                success: true,
+                message: 'คุณได้รับสติกเกอร์ใหม่ 1 ชิ้น',
+                dataSticker: sticker
+              })
+            })
+      })
+  } else {
+    res.status(400).send({success: false, message: 'รหัส QR ผิดพลาด กรุณาลองอีกครั้ง'})
+  }
 })
 
 module.exports = router
