@@ -66,4 +66,22 @@ router.get('/userGetMatch', authenticatePhone, (req, res) => {
 //   )
 // })
 
+
+
+ 
+  router.get('/myMatch' , authenticatePhone ,(req,res)=> { 
+    User
+      .findOne({ _id:req.decoded.userId })
+      .populate('myMatch.match')
+      .then(data =>{
+        var myMatches = data.myMatch
+        if(myMatches.length == 0){
+          res.status(400).send({mainmessage: 'คุณไม่มี Match' , submessage :'หากคุณมีคะแนนมากกว่า 1 คุณจะสามารถแลกMatchได้'})
+        }
+        res.send(myMatches) 
+      }).catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
+  }) 
+
+
+
 module.exports = router
