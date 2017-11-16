@@ -131,4 +131,27 @@ router.post("/getSticker", authenticatePhone, (req, res) => {
   }
 })
 
+// router.patch("/useSticker", authenticatePhone, (req, res) => {
+//   let stickerBtnId = req.body.stickerBtnId
+
+//   User
+//     .findOneAndUpdate(
+//       { _id: req.decoded.userId, "mySticker": {$elemMatch: {use: false}} }, 
+//       { $set: { 'mySticker.$.use': true } }, 
+//       { new: true }
+//     )
+//     .populate('mySticker.sticker')
+//     .exec((err, sticker) => {
+//       // if (err) {
+//       //   return res.status(400).send({ success: false, message: 'คุณไม่มีสติกเกอร์นี้'})
+//       // }
+//       res.send({
+//         success: true,
+//         message: 'ติดสติกเกอร์เรียบร้อย',
+//         sticker: sticker
+//       })
+//     })
+//     // .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
+// })
+
 module.exports = router

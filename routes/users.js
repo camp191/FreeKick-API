@@ -11,6 +11,7 @@ const { secret } = require('./../config/config')
 const { User } = require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 const { Mission } = require('./../models/mission')
+const { Team } = require('./../models/team')
 
 // Add User
 router.post('/addUser', (req, res) => {
@@ -58,7 +59,7 @@ router.post('/addUser', (req, res) => {
                 })
               }
             )
-            .catch(e => res.send({ success: false, message: 'เบอร์นี้ใช้สมัครแล้ว'}))
+            .catch(e => res.send({ success: false, message: 'เบอร์นี้ใช้สมัครแล้ว', e}))
         })
     })
     .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
@@ -165,6 +166,14 @@ router.get('/userdata', authenticatePhone, (req, res) => {
       })
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
+})
+
+router.get('/getTeam', authenticatePhone, (req, res) => {
+  Team
+    .find({})
+    .then(data => {
+      res.send(data)
+    })
 })
 
 // User myTeam

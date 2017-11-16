@@ -25,7 +25,7 @@ const matchSchema = mongoose.Schema({
     require: true
   },
   matchTime: {
-    type: Number,
+    type: String,
     require: true
   },
   matchVideo: {

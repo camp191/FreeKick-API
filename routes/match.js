@@ -4,6 +4,7 @@ const { ObjectID } = require('mongodb')
 const { authenticatePhone } = require('./../middleware/authenticate')
 
 const { Match } = require('./../models/match')
+const { User } = require('./../models/user')
 
 router.get('/all', authenticatePhone, (req, res) => {
   Match
@@ -15,7 +16,7 @@ router.get('/all', authenticatePhone, (req, res) => {
     })
 })
 
-router.get('/:matchId', authenticatePhone, (req, res) => {
+router.get('/match/:matchId', authenticatePhone, (req, res) => {
   const matchId = req.params.matchId
 
   if(!ObjectID.isValid(matchId)) {
@@ -30,5 +31,39 @@ router.get('/:matchId', authenticatePhone, (req, res) => {
       res.status(400).send({ success: false, message: 'พบความผิดพลาด' })
     })
 })
+
+router.get('/userGetMatch', authenticatePhone, (req, res) => {
+
+  User
+    .findOne({ _id: req.decoded.userId })
+    .then(data => {
+      // console.log(data)
+      if (data.manpoint < 1) {
+        res.send({success: false, message: "แต้มไม่เพียงพอในการแลก"})
+      } else {
+
+      }
+    })
+    .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
+})
+
+// router.post("/match", (req, res) => {
+//   let match = new Match({
+//     matchName: "aaaaa",
+//     matchPicture: "aaaa.jpg",
+//     matchDetail: "aaaaa",
+//     matchDescription: "aaaaaa",
+//     matchCondition: "aaaaa",
+//     matchPoint: 1,
+//     matchTime: ".......",
+//     matchVideo: "......."
+//   })
+
+//   match.save().then(
+//     data => {
+//       res.send({data})
+//     }
+//   )
+// })
 
 module.exports = router
