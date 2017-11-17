@@ -136,22 +136,6 @@ router.patch('/randomSticker', authenticatePhone, (req, res) => {
     })
 })
 
-// Get User Mission
-router.get('/myMission', authenticatePhone, (req, res) => {
-  User
-    .findOne({ _id: req.decoded.userId })
-    .populate('myMission.mission')
-    .then(data => {
-      res.send({
-        success: true,
-        myMission: data.myMission
-      })
-    })
-    .catch(e => {
-      res.status(400).send({ success: false, message: 'พบความผิดพลาด' })
-    })
-})
-
 // User basic data
 router.get('/userdata', authenticatePhone, (req, res) => {
   User
