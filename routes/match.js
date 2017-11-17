@@ -32,16 +32,26 @@ router.get('/match/:matchId', authenticatePhone, (req, res) => {
     })
 })
 
-router.get('/userGetMatch', authenticatePhone, (req, res) => {
+router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
+  const matchId = req.params.matchId
 
   User
     .findOne({ _id: req.decoded.userId })
     .then(data => {
-      // console.log(data)
       if (data.manpoint < 1) {
         res.send({success: false, message: "แต้มไม่เพียงพอในการแลก"})
       } else {
-
+        
+        User
+          .findOneAndUpdate(
+            { _id: req.decoded.userId },
+            { $push: { myMatch: { match: matchId } }, $inc: { manpoint: -1 } },
+            { new: true }
+          )
+          .then(data => {
+            res.send(data)
+          })
+          .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาดในการแลก' }))
       }
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
