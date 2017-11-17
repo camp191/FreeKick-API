@@ -26,7 +26,19 @@ router.get('/match/:matchId', authenticatePhone, (req, res) => {
   Match
     .findOne({ _id: matchId })
     .then(data => {
-      res.send({match: data})
+      User
+        .findOne({ _id: req.decoded.userId })
+        .then(userdata => {
+          const checkMatch = userdata.myMatch.filter(match => {
+            return match.match.toString() === matchId
+          })
+
+          if (checkMatch.length > 0) {
+            res.send({ success: true, userGet: true, data })
+          } else {
+            res.send({ success: true, userGet: false, data })
+          }
+        })
     }, (e) => {
       res.status(400).send({ success: false, message: 'พบความผิดพลาด' })
     })
@@ -41,7 +53,6 @@ router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
       if (data.manpoint < 1) {
         res.send({success: false, message: "แต้มไม่เพียงพอในการแลก"})
       } else {
-        
         User
           .findOneAndUpdate(
             { _id: req.decoded.userId },
@@ -49,48 +60,28 @@ router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
             { new: true }
           )
           .then(data => {
-            res.send(data)
+            res.send({ success: true, message: 'แลก Match สำเร็จ' })
           })
           .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาดในการแลก' }))
       }
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
-
-// router.post("/match", (req, res) => {
-//   let match = new Match({
-//     matchName: "aaaaa",
-//     matchPicture: "aaaa.jpg",
-//     matchDetail: "aaaaa",
-//     matchDescription: "aaaaaa",
-//     matchCondition: "aaaaa",
-//     matchPoint: 1,
-//     matchTime: ".......",
-//     matchVideo: "......."
-//   })
-
-//   match.save().then(
-//     data => {
-//       res.send({data})
-//     }
-//   )
-// })
-
-
-
  
-  router.get('/myMatch' , authenticatePhone ,(req,res)=> { 
-    User
-      .findOne({ _id:req.decoded.userId })
-      .populate('myMatch.match')
-      .then(data =>{
-        var myMatches = data.myMatch
-        if(myMatches.length == 0){
-          res.status(400).send({mainmessage: 'คุณไม่มี Match' , submessage :'หากคุณมีคะแนนมากกว่า 1 คุณจะสามารถแลกMatchได้'})
-        }
+router.get('/myMatch', authenticatePhone, (req,res)=> { 
+  User
+    .findOne({ _id: req.decoded.userId })
+    .populate('myMatch.match')
+    .then(data => {
+      var myMatches = data.myMatch
+      if (myMatches.length == 0) {
+        res.send({ mainmessage: 'คุณไม่มี Match' , submessage :'หากคุณมีคะแนนมากกว่า 1 คุณจะสามารถแลก Match ได้' })
+      } else {
         res.send(myMatches) 
-      }).catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
-  }) 
+      }
+    })
+    .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
+}) 
 
 
 
