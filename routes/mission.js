@@ -52,8 +52,4 @@ router.get('/myMission', authenticatePhone, (req, res) => {
     })
 })
 
-router.patch('/doMission/:missionId', authenticatePhone, (req, res) => {
-  
-})
-
 module.exports = router

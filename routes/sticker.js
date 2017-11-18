@@ -104,7 +104,7 @@ router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
 })
 
 // Get sticker from QR
-router.post("/getSticker", authenticatePhone, (req, res) => {
+router.post("/getStickerQR", authenticatePhone, (req, res) => {
   const code = req.body.code
 
   if (code === 1234) {
@@ -118,17 +118,46 @@ router.post("/getSticker", authenticatePhone, (req, res) => {
                   ...sticker,
                 }
               }}
-            ).then(data => {
-              res.send({
-                success: true,
-                message: 'คุณได้รับสติกเกอร์ใหม่ 1 ชิ้น',
-                dataSticker: sticker
+            )
+            .then(data => {
+              const missionId = '59f75e424837d11fdfee35a0'
+              const checkMission = data.myMission.find(mission => {
+                return ((mission.mission).toString() === missionId) && (mission.done === false)
               })
+
+              if (checkMission) {
+                User
+                  .findOneAndUpdate(
+                    { _id: req.decoded.userId, 'myMission.mission': missionId },
+                    { $set: { 'myMission.$.done': true }}
+                  )
+                  .then(() => {
+                    res.send({
+                      success: true,
+                      missionId,
+                      missionMessage: 'คุณได้ผ่านภารกิจเปิดสติกเกอร์นักเตะครั้งแรก ได้รางวัลสติกเกอร์ 2 ใบ กดรับได้ทันที',
+                      message: 'คุณได้รับสติกเกอร์ใหม่ 1 ชิ้น',
+                      dataSticker: sticker
+                    })
+                  })
+                  .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
+              } else {
+                res.send({
+                  success: true,
+                  message: 'คุณได้รับสติกเกอร์ใหม่ 1 ชิ้น',
+                  dataSticker: sticker
+                })
+              }
             })
+            .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
       })
   } else {
     res.status(400).send({success: false, message: 'รหัส QR ผิดพลาด กรุณาลองอีกครั้ง'})
   }
+})
+
+router.patch("/getReward/:missionId", authenticatePhone, (req, res) => {
+
 })
 
 // router.patch("/useSticker", authenticatePhone, (req, res) => {
