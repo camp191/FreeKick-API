@@ -6,30 +6,6 @@ const { authenticatePhone } = require('./../middleware/authenticate')
 const { Sticker } = require('./../models/sticker')
 const { User } = require('./../models/user')
 
-// router.post("/addSticker", (req, res) => {
-//   let sticker = new Sticker({
-//     stickerImage: req.body.stickerImage,
-//     playerId: req.body.playerId
-//   })
-
-//   sticker.save().then(
-//     data => {
-//       res.send({data})
-//     }
-//   )
-// })
-
-// router.get("/:playerId", (req, res) => {
-//   const playerId = req.params.playerId
-
-//   Sticker
-//     .find({ playerId: playerId })
-//     .populate('playerId')
-//     .then(data => {
-//       res.send({sticker: data})
-//     })
-// })
-
 router.get("/mySticker", authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -120,22 +96,32 @@ router.post("/getStickerQR", authenticatePhone, (req, res) => {
               }}
             )
             .then(data => {
-              const missionId = '59f75e424837d11fdfee35a0'
+              const missionIdFirst = '59f75ed47214b5998337d0cc'
+              const missionIdSecond = '59f75ef47214b5998337d51f'
               const checkMission = data.myMission.find(mission => {
-                return ((mission.mission).toString() === missionId) && (mission.done === false)
+                const findMissionFirst = ((mission.mission).toString() === missionIdFirst) && (mission.done === false)
+                const findMissionSecond = ((mission.mission).toString() === missionIdSecond) && (mission.done === false)
+                return findMissionFirst || findMissionSecond
               })
 
               if (checkMission) {
                 User
                   .findOneAndUpdate(
-                    { _id: req.decoded.userId, 'myMission.mission': missionId },
+                    { _id: req.decoded.userId, 'myMission.mission': checkMission.mission },
                     { $set: { 'myMission.$.done': true }}
                   )
                   .then(() => {
+                    let missionMessage = ''
+                    if (checkMission.mission.toString() === missionIdFirst) {
+                      missionMessage = 'คุณได้ผ่านภารกิจการหาสติกเกอร์นักเตะจากรายการ True4you ได้รับรางวัลสติกเกอร์ 10 ใบ กดรับได้ทันที'
+                    } else if (checkMission.mission.toString() === missionIdSecond) {
+                      missionMessage = 'คุณได้ผ่านภารกิจการหาสติกเกอร์นักเตะจากรายการถ่ายทอดสดฟุตบอล ได้รับรางวัลสติกเกอร์ 10 ใบ กดรับได้ทันที'
+                    }
+
                     res.send({
                       success: true,
-                      missionId,
-                      missionMessage: 'คุณได้ผ่านภารกิจเปิดสติกเกอร์นักเตะครั้งแรก ได้รางวัลสติกเกอร์ 2 ใบ กดรับได้ทันที',
+                      missionId: checkMission.mission,
+                      missionMessage: missionMessage,
                       message: 'คุณได้รับสติกเกอร์ใหม่ 1 ชิ้น',
                       dataSticker: sticker
                     })
@@ -154,10 +140,6 @@ router.post("/getStickerQR", authenticatePhone, (req, res) => {
   } else {
     res.status(400).send({success: false, message: 'รหัส QR ผิดพลาด กรุณาลองอีกครั้ง'})
   }
-})
-
-router.patch("/getReward/:missionId", authenticatePhone, (req, res) => {
-
 })
 
 // router.patch("/useSticker", authenticatePhone, (req, res) => {

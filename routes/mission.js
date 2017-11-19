@@ -52,4 +52,8 @@ router.get('/myMission', authenticatePhone, (req, res) => {
     })
 })
 
+router.patch("/getReward/:missionId", authenticatePhone, (req, res) => {
+  
+})
+
 module.exports = router
