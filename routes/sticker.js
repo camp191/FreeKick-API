@@ -49,11 +49,40 @@ router.patch("/openPack", authenticatePhone, (req, res) => {
       })
 
       Promise.all(updateSticker).then(() => {
-        res.send({
-          newSticker: falseSticker,
-          amount: falseSticker.length
+        const missionId = '59f75e424837d11fdfee35a0'
+        const checkMission = data.myMission.find(mission => {
+          return ((mission.mission).toString() === missionId) && (mission.done === false)
         })
+
+        const stickerOpen = falseSticker.map(sticker => {
+          return { _id: sticker._id, use: sticker.use, open: true}
+        })
+
+        if (checkMission) {
+          User
+            .findOneAndUpdate(
+              { _id: req.decoded.userId, 'myMission.mission': missionId },
+              { $set: { 'myMission.$.done': true }}
+            )
+            .then(() => {
+              res.send({
+                success: true,
+                missionId: missionId,
+                missionMessage: 'คุณได้ผ่านภารกิจการเปิดสติกเกอร์นักเตะครั้งแรก ได้รับรางวัลสติกเกอร์ 2 ใบ กดรับได้ทันที',
+                message: 'เปิดสติกเกอร์เรียบร้อย',
+                newSticker: stickerOpen,
+                amount: stickerOpen.length
+              })
+            })
+        } else {
+          res.send({
+            success: true,
+            newSticker: stickerOpen,
+            amount: stickerOpen.length
+          })
+        }
       })
+      .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
     })
 })
 
