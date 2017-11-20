@@ -119,9 +119,7 @@ router.post("/getStickerQR", authenticatePhone, (req, res) => {
             .findOneAndUpdate(
               { _id: req.decoded.userId },
               { $push: { 
-                mySticker: {
-                  ...sticker,
-                }
+                mySticker: { sticker: sticker[0]._id }
               }}
             )
             .then(data => {

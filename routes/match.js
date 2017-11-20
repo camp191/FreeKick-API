@@ -60,7 +60,28 @@ router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
             { new: true }
           )
           .then(data => {
-            res.send({ success: true, message: 'แลก Match สำเร็จ' })
+            const missionId = '59f75f1c7214b5998337d94f'
+            const checkMission = data.myMission.find(mission => {
+              return ((mission.mission).toString() === missionId) && (mission.done === false)
+            })
+
+            if (checkMission) {
+              User
+                .findOneAndUpdate(
+                  { _id: req.decoded.userId, 'myMission.mission': missionId },
+                  { $set: { 'myMission.$.done': true }}
+                )
+                .then(() => {
+                  res.send({
+                    success: true,
+                    missionId: missionId,
+                    missionMessage: 'คุณได้ผ่านภารกิจการแลก Match ครั้งแรก ได้รับรางวัลสติกเกอร์ 3 ใบ กดรับได้ทันที',
+                    message: 'แลก Match สำเร็จ',
+                  })
+                })
+            } else {
+              res.send({ success: true, message: 'แลก Match สำเร็จ' })
+            }
           })
           .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาดในการแลก' }))
       }
