@@ -60,3 +60,6 @@ typings/
 #config file
 /config
 
+#public file
+/public
+

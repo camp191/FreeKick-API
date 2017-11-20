@@ -89,7 +89,7 @@ router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
  
-router.get('/myMatch', authenticatePhone, (req,res)=> { 
+router.get('/myMatch', authenticatePhone, (req,res) => { 
   User
     .findOne({ _id: req.decoded.userId })
     .populate('myMatch.match')
@@ -104,6 +104,26 @@ router.get('/myMatch', authenticatePhone, (req,res)=> {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 }) 
 
+router.get('/videos/:videoId', authenticatePhone, (req, res) => {
+  const videoId = req.params.videoId
+
+    if (+videoId === 1) {
+      res.send({
+        success: true,
+        videoLink: `http://localhost:3000/videos/SampleVideo${+videoId}.mp4`
+      })
+    } else if (+videoId === 2) {
+      res.send({
+        success: true,
+        videoLink: `http://localhost:3000/videos/SampleVideo${+videoId}.mp4`
+      })
+    } else {
+      res.send({
+        success: false,
+        message: 'พบความผิดพลาดในการเล่นวิดิโอ'
+      })
+    }
+})
 
 
 module.exports = router
