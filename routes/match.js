@@ -89,12 +89,12 @@ router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
  
-router.get('/myMatch', authenticatePhone, (req,res) => { 
+router.get('/myMatch', authenticatePhone, (req, res) => { 
   User
     .findOne({ _id: req.decoded.userId })
     .populate('myMatch.match')
     .then(data => {
-      var myMatches = data.myMatch
+      const myMatches = data.myMatch
       if (myMatches.length == 0) {
         res.send({ mainmessage: 'คุณไม่มี Match' , submessage :'หากคุณมีคะแนนมากกว่า 1 คุณจะสามารถแลก Match ได้' })
       } else {
@@ -102,27 +102,46 @@ router.get('/myMatch', authenticatePhone, (req,res) => {
       }
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
-}) 
+})
 
-router.get('/videos/:videoId', authenticatePhone, (req, res) => {
+router.get('/myHistoryMatch', authenticatePhone, (req, res) => {
+  User
+    .findOne({ _id: req.decoded.userId })
+    .populate('myMatch.match')
+    .then(data => {
+      const filterWatch = data.myMatch.filter(match => {
+        return match.watch === true
+      })
+
+      res.send({
+        success: true,
+        historyMatch: filterWatch
+      })
+    })
+    .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
+})
+
+router.get('/videos/:videoId/:matchId', authenticatePhone, (req, res) => {
   const videoId = req.params.videoId
+  const matchId = req.params.matchId
 
-    if (+videoId === 1) {
+  User
+    .findOneAndUpdate(
+      { _id: req.decoded.userId, 'myMatch.match': matchId },
+      { $set: { 'myMatch.$.watch': true }}
+    )
+    .then(data => {
       res.send({
         success: true,
         videoLink: `http://localhost:3000/videos/SampleVideo${+videoId}.mp4`
       })
-    } else if (+videoId === 2) {
-      res.send({
-        success: true,
-        videoLink: `http://localhost:3000/videos/SampleVideo${+videoId}.mp4`
-      })
-    } else {
+    })
+    .catch(e => {
       res.send({
         success: false,
         message: 'พบความผิดพลาดในการเล่นวิดิโอ'
       })
-    }
+    })
 })
 
 
