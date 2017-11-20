@@ -28,7 +28,7 @@ const matchSchema = mongoose.Schema({
     type: String,
     require: true
   },
-  matchVideo: {
+  matchVideoId: {
     type: String
   }
 })

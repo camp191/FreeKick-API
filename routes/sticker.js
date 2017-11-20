@@ -169,6 +169,21 @@ router.post("/getStickerQR", authenticatePhone, (req, res) => {
   }
 })
 
+router.patch("/getPlayerPoint", authenticatePhone, (req, res) => {
+  User
+    .findOneAndUpdate(
+      { _id: req.decoded.userId },
+      { $inc: { manpoint: 1 }}
+    )
+    .then(data => {
+      res.send({
+        success: true,
+        message: "คุณได้รับ Player point จำนวน 1 แต้มแล้ว"
+      })
+    })
+    .catch(e => res.status(400).send({ success: false, message: 'พบความผิพพลาด' }))
+})
+
 // router.patch("/useSticker", authenticatePhone, (req, res) => {
 //   let stickerBtnId = req.body.stickerBtnId
 
