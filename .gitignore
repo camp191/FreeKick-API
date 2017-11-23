@@ -62,4 +62,5 @@ typings/
 
 #public file
 /public
+.DS_Store
 
