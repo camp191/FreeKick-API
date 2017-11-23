@@ -6,6 +6,7 @@ const { authenticatePhone } = require('./../middleware/authenticate')
 const { Sticker } = require('./../models/sticker')
 const { User } = require('./../models/user')
 
+
 router.get("/mySticker", authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -206,5 +207,20 @@ router.patch("/getPlayerPoint", authenticatePhone, (req, res) => {
 //     })
 //     // .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 // })
+
+router.patch("/usedSticker" ,authenticatePhone , (req, res)=>{
+  let stickerBtnId = req.body.stickerBtnId
+
+  User.findOneAndUpdate(
+    { _id: req.decoded.userId, mySticker: {$elemMatch: { sticker: stickerBtnId,  use: false }} }, 
+    { $set: { 'mySticker.$.use': true } } 
+  ).then(data => {
+    res.send({
+      message: "คุณใช้สติกเกอร์แล้ว"
+    })
+  })
+})
+
+
 
 module.exports = router
