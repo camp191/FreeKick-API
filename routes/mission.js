@@ -67,7 +67,6 @@ router.patch("/getReward/:missionId", authenticatePhone, (req, res) => {
 
   Sticker
     .findRandom({}, {}, {limit: amountSticker}, function(err, sticker) {
-      console.log(sticker)
       const updateSticker = sticker.map(sticker => 
         User
           .findOneAndUpdate(

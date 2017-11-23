@@ -96,15 +96,37 @@ router.get("/myAlbum", authenticatePhone, (req, res) => {
     })
 })
 
-router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
-  const teamId = req.params.teamId
+// router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
+//   const teamId = req.params.teamId
+
+//   User
+//     .findOne({ _id: req.decoded.userId })
+//     .populate({path: 'mySticker.sticker', populate: {path: 'playerId'}})
+//     .then(data => {
+//       const myStickerTeam = data.mySticker.filter(sticker => sticker.sticker.playerId.team == teamId)
+//       res.send({userTeamSticker: myStickerTeam})
+//     })
+// })
+
+router.get("/myStickerPlayer/:playerId", authenticatePhone, (req, res) => {
+  const playerId = req.params.playerId
 
   User
-    .findOne({ _id: req.decoded.userId })
-    .populate({path: 'mySticker.sticker', populate: {path: 'playerId'}})
+    .findOne({ _id: req.decoded.userId, 'mySticker.use': true })
+    .populate('mySticker.sticker')
     .then(data => {
-      const myStickerTeam = data.mySticker.filter(sticker => sticker.sticker.playerId.team == teamId)
-      res.send({userTeamSticker: myStickerTeam})
+      const filterPlayerMySticker = data.mySticker.filter(sticker => {
+        return sticker.sticker.playerId.toString() === playerId
+      })
+
+      let userPlayerSticker = new Array(8)
+
+      filterPlayerMySticker.forEach(sticker => {
+        let position = +sticker.sticker.stickerImage.substr(-5, 1);
+        userPlayerSticker[position-1] = {sticker: true, stickerName: sticker.sticker.stickerImage}
+      })
+
+      res.send(userPlayerSticker)
     })
 })
 
