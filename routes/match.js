@@ -98,9 +98,11 @@ router.get('/myMatch', authenticatePhone, (req, res) => {
       if (myMatches.length == 0) {
         res.send({ mainmessage: 'คุณไม่มี Match' , submessage :'หากคุณมีคะแนนมากกว่า 1 คุณจะสามารถแลก Match ได้' })
       } else {
+        const filterMatch = myMatches.map(match => {
+          return match.match
+        })
         res.send({
-          success: true,
-          myMatches: myMatches
+          matches: filterMatch
         }) 
       }
     })
@@ -114,11 +116,12 @@ router.get('/myHistoryMatch', authenticatePhone, (req, res) => {
     .then(data => {
       const filterWatch = data.myMatch.filter(match => {
         return match.watch === true
+      }).map(match => {
+        return match.match
       })
 
       res.send({
-        success: true,
-        historyMatch: filterWatch
+        matches: filterWatch
       })
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))

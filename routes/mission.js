@@ -39,6 +39,7 @@ router.get('/myMission', authenticatePhone, (req, res) => {
       if (MissionNotDone.length === 0) {
         res.send({
           success: true,
+          data: [],
           message: 'คุณทำภารกิจทั้งหมดแล้ว'
         })
       } else {
