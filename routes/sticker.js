@@ -10,7 +10,7 @@ const { User } = require('./../models/user')
 router.get("/mySticker", authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
-    .populate('mySticker.sticker')
+    .populate({path: 'mySticker.sticker', populate: { path: 'playerId', populate: { path: 'team'} }})
     .then(data => {
       const stickers = data.mySticker
       const openSticker =  stickers.filter((sticker) => sticker.open === true)
