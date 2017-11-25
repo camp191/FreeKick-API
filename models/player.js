@@ -49,7 +49,15 @@ const playerSchema = mongoose.Schema({
   sticker: [{ 
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Sticker'
-  }]
+  }],
+  picture: {
+    color: {
+      type: String
+    },
+    bw: {
+      type: String
+    }
+  },
 })
 
 const Player = mongoose.model('Player', playerSchema)
