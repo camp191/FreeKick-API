@@ -6,6 +6,7 @@ const { authenticatePhone } = require('./../middleware/authenticate')
 const { Match } = require('./../models/match')
 const { User } = require('./../models/user')
 
+// Get All Match
 router.get('/all', authenticatePhone, (req, res) => {
   Match
     .find()
@@ -16,6 +17,7 @@ router.get('/all', authenticatePhone, (req, res) => {
     })
 })
 
+// Get A Match
 router.get('/match/:matchId', authenticatePhone, (req, res) => {
   const matchId = req.params.matchId
 
@@ -44,6 +46,7 @@ router.get('/match/:matchId', authenticatePhone, (req, res) => {
     })
 })
 
+// User Get Match
 router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
   const matchId = req.params.matchId
 
@@ -88,7 +91,8 @@ router.patch('/userGetMatch/:matchId', authenticatePhone, (req, res) => {
     })
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
- 
+
+// Query My Match
 router.get('/myMatch', authenticatePhone, (req, res) => { 
   User
     .findOne({ _id: req.decoded.userId })
@@ -109,6 +113,7 @@ router.get('/myMatch', authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
 
+// Get My History Match
 router.get('/myHistoryMatch', authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -127,6 +132,7 @@ router.get('/myHistoryMatch', authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
 
+// Get Video
 router.get('/videos/:videoId/:matchId', authenticatePhone, (req, res) => {
   const videoId = req.params.videoId
   const matchId = req.params.matchId

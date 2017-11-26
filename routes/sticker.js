@@ -6,7 +6,7 @@ const { authenticatePhone } = require('./../middleware/authenticate')
 const { Sticker } = require('./../models/sticker')
 const { User } = require('./../models/user')
 
-
+// Query My Sticker
 router.get("/mySticker", authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -43,6 +43,7 @@ router.get("/mySticker", authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
 })
 
+// Open Pack Sticker
 router.patch("/openPack", authenticatePhone, (req, res) => {
 
   User.findOne({ _id: req.decoded.userId })
@@ -98,7 +99,7 @@ router.patch("/openPack", authenticatePhone, (req, res) => {
     })
 })
 
-// My Album
+// Query My Album (my Team and Player)
 router.get("/myAlbum", authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
@@ -108,6 +109,7 @@ router.get("/myAlbum", authenticatePhone, (req, res) => {
     })
 })
 
+// Query Sticker that using by Team
 router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
   const teamId = req.params.teamId
 
@@ -141,6 +143,7 @@ router.get("/myStickerTeam/:teamId", authenticatePhone, (req, res) => {
     })
 })
 
+// Query Sticker that using by player
 router.get("/myStickerPlayer/:playerId", authenticatePhone, (req, res) => {
   const playerId = req.params.playerId
   
@@ -224,6 +227,7 @@ router.post("/getStickerQR", authenticatePhone, (req, res) => {
   }
 })
 
+// Add player point
 router.patch("/getPlayerPoint", authenticatePhone, (req, res) => {
   User
     .findOneAndUpdate(
@@ -239,6 +243,7 @@ router.patch("/getPlayerPoint", authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิพพลาด' }))
 })
 
+// use Sticker
 router.patch("/usedSticker", authenticatePhone, (req, res) => {
   let stickerBtnId = req.body.stickerBtnId
 

@@ -7,6 +7,7 @@ const { Mission } = require('./../models/mission')
 const { User } =  require('./../models/user')
 const { Sticker } = require('./../models/sticker')
 
+// Query a Mission By Id
 router.get('/mission/:missionId', authenticatePhone, (req, res) => {
   const missionId = req.params.missionId
 
@@ -54,6 +55,7 @@ router.get('/myMission', authenticatePhone, (req, res) => {
     })
 })
 
+// Get reward from Mission
 router.patch("/getReward/:missionId", authenticatePhone, (req, res) => {
   const missionId = req.params.missionId
   let amountSticker = 0

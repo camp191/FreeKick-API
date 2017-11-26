@@ -113,6 +113,7 @@ router.patch('/addTeam/:teamId', authenticatePhone, (req, res) => {
     })
 })
 
+// Ramdom Sticker for new User
 router.patch('/randomSticker', authenticatePhone, (req, res) => {
   Sticker
     .findRandom({}, {}, {limit: 5}, function(err, stickers) {
@@ -152,6 +153,7 @@ router.get('/userdata', authenticatePhone, (req, res) => {
     .catch(e => res.status(400).send({ success: false, message: 'พบความผิดพลาด' }))
 })
 
+// Get All Team
 router.get('/getTeam', authenticatePhone, (req, res) => {
   Team
     .find({})
@@ -160,7 +162,7 @@ router.get('/getTeam', authenticatePhone, (req, res) => {
     })
 })
 
-// User myTeam
+// Get User Team
 router.get('/myTeam', authenticatePhone, (req, res) => {
   User
     .findOne({ _id: req.decoded.userId })
