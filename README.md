@@ -29,4 +29,14 @@ http://localhost:3000/images/stickers/ +++ STICKER NAME +++
 
 Player
 http://localhost:3000/images/players/ +++ PLAYER PICTURE NAME +++
+
+Mission
+http://localhost:3000/images/missions/ +++ MISSION PICTURE NAME +++
+
+Matches
+http://localhost:3000/images/matches/ +++ MATCHES PICTURE NAME +++
+
+Video
+http://localhost:3000/videos/SampleVideo1.mp4
+
 ```
