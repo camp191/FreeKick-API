@@ -16,6 +16,16 @@ router.get("/mySticker", authenticatePhone, (req, res) => {
       const openSticker =  stickers.filter((sticker) => sticker.open === true)
       const findNotOpen = stickers.filter((sticker) => sticker.open === false)
 
+      const clientData = openSticker.map(sticker => {
+        return {
+          sticker: sticker.sticker.stickerImage,
+          playerName: sticker.sticker.playerId.name,
+          position: sticker.sticker.playerId.position,
+          age: sticker.sticker.playerId.age,
+          team: sticker.sticker.playerId.team.teamName
+        }
+      })
+
       if (findNotOpen.length > 0) {
         res.send({
           notOpen: {
@@ -23,11 +33,12 @@ router.get("/mySticker", authenticatePhone, (req, res) => {
             amount: findNotOpen.length,
             stickerImage: 'stickerpack.png'
           },
-          openSticker
+          openSticker: clientData
         })
       } else {
-        res.send({ success:true, openSticker })
+        res.send({ success:true, openSticker: clientData })
       }
+      
     })
     .catch(e => res.status(400).send({success: false, message: 'พบความผิดพลาด'}))
 })
